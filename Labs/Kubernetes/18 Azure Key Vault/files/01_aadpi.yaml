@@ -1,0 +1,8 @@
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzureIdentity
+metadata:
+  name: st20identity
+spec:
+  type: 0
+  ResourceID: /subscriptions/c0eace6b-deca-4861-8042-b4e807cef056/resourcegroups/abbst-rg20/providers/Microsoft.ManagedIdentity/userAssignedIdentities/st20identity
+  ClientID: 2a7314a3-e746-41ec-b064-fcd81f1fc226

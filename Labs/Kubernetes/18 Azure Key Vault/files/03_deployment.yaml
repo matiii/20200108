@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: nginx-pod-id
+    aadpodidbinding: pod-with-identity
+  name: nginx-pod-id
+spec:
+  containers:
+  - name: nginx-pod-id
+    image: nginx
+    volumeMounts:
+    - name: test
+      mountPath: /kvmnt
+      readOnly: true
+  volumes:
+  - name: test
+    flexVolume:
+      driver: "azure/kv"
+      options:
+        usepodidentity: "true"         # [OPTIONAL] if not provided, will default to "false"
+        keyvaultname: "st20kv"               # the name of the KeyVault
+        keyvaultobjectnames: "st20secrat"        # list of KeyVault object names (semi-colon separated)
+        keyvaultobjecttypes: secret    # list of KeyVault object types: secret, key or cert (semi-colon separated)
+        keyvaultobjectversions: ""     # [OPTIONAL] list of KeyVault object versions (semi-colon separated), will get latest if empty
+        resourcegroup: "abbst-rg20"              # [REQUIRED FOR < v0.0.14] the resource group of the KeyVault
+        subscriptionid: "c0eace6b-deca-4861-8042-b4e807cef056"             # [REQUIRED FOR < v0.0.14] the subscription ID of the KeyVault
+        tenantid: "3a81269f-0731-42d7-9911-a8e9202fa750"                   # the tenant ID of the KeyVault
