@@ -10,12 +10,7 @@
 #### In this lab you will build docker images using single and multistage building.
 
 ## Task 1: Building web-client
-In this task you will bbuild web-client image using single stage building process.
 
-1. Open your Cloud9 environment or any environment you use for this lab.
-2. Clone the repository
-```
-git clone https://github.com/cloudstateu/ECS_Deploy.git
 ```
 3. Enter the *web-client* directory:
 ```
