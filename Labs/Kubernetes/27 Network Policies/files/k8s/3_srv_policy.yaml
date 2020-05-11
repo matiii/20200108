@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: srv-network-policy
+  namespace: srv
+spec:
+  podSelector:
+    matchLabels:
+      id: srv
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          project: srv
+    - podSelector:
+        matchLabels:
+          id: app

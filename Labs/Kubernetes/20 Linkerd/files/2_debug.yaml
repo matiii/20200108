@@ -15,8 +15,8 @@ spec:
         app: debug
     spec:
       containers:
-      - image: ubuntu
-        name: ubuntu
+      - image: przemekmalak/tools
+        name: debug
         command:
         - sleep
         - "999999999999"

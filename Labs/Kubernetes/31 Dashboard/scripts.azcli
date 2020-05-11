@@ -1,0 +1,11 @@
+#create cluster role for dashboard
+#be carefull - this one is very unsecure
+kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+
+#let check where the cluster dashboard is
+kubectl cluster-info
+
+#let's run the proxy
+kubectl proxy
+
+az aks browse -g <resourceGroup> -n <clusterName>
