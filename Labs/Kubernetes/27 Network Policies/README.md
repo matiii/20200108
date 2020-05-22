@@ -11,37 +11,88 @@
 
 ## Task 1: Deploying the application
 
-1. Deploy *ingress controller* iy you do not have it by executing following command:
+1. Deploy the application
 ```
-kubectl apply -f 1_ingress_nginx.yaml 
+kubectl apply -f 1_deployments.md
 ```
-2. Create a namespace for the deployment
+2. Find your *service*  address by executing:
 ```
-kubectl create ns srv
+kubectl get svc -n np
 ```
-3. Deploy the application
+3. Check if the pods are running:
 ```
-kubectl apply -f 2_deployments.md
+kubectl get pods -n np --show-labels
 ```
-4. Find your *ingress* external address by executing:
-```
-kubectl get svc --all-namespaces | grep LoadBalancer
-```
-5. Using any browser of your choice check if the app works. Open following urls:
-```
-<YOUR INGRESS IP ADDRESS>/app1
-<YOUR INGRESS IP ADDRESS>/srv1
-<YOUR INGRESS IP ADDRESS>/srv2
-```
-![app](img/app.png)
+Please notice, there are two groups of pods: nackend and frontend.
+![pods](img/pods.png)
 
-## Task 2: Applying network policies
-
-1. 
+4. Get a list of services:
 ```
-kubectl apply -f 3_deny_all_ingress.yaml -n srv
+kubectl get svc -n np
 ```
+## Task 2: Applying ingress network policies
 
+1. Using second terminal window, run additional pod by executing:
+```
+kubectl run test --image=przemekmalak/tools -it --rm --restart=Never -- sh
+```
+2. Inside the pod check if all the connections work by executing:
+* connection to frontend service: ``curl -m 3 front.np``
+* connection to backend services: ``curl -m 3 app1.np`` and ``curl -m 3 app2.np``
+* connection between frontend and backend pods: ``curl -m 3 front.np/req?url=http://app1.np``
+3.  Close ingress traffic on backend pods by applying network policy:
+```
+kubectl apply -f 2_ingress_policy.yaml
+```
+4. Inside the test pod check connections:
+* to frontend service: ``curl -m 3 front.np`` (should be OK)
+* connection to backend services: ``curl -m 3 app1.np`` and ``curl -m 3 app2.np``
+* connection between frontend and backend pods: ``curl -m 3 front.np/req?url=http://app1.np``
+5. Allow ingress traffic to backend pods from frontend pods
+```
+kubectl apply -f 3_allow_policy.yaml
+```
+6. Inside the test pod check connections:
+* to frontend service: ``curl -m 3 front.np`` (should be OK)
+* connection to backend services: ``curl -m 3 app1.np`` and ``curl -m 3 app2.np``
+* connection between frontend and backend pods: ``curl -m 3 front.np/req?url=http://app1.np`` (should be OK)
+
+## Task 3: Applying egress network policies
+
+1. Close outgoing traffic for frontend pods by aplying egress policy:
+```
+kubectl apply -f 4_egress_policy.yaml
+```
+2. Back, inside test pod check the connections:
+* between frontend and backend pods ``curl -m 3 front.np/req?url=http://app1.np``
+
+3. Allow egress traffic on frontend pods. Allow then to connect to backend pods:
+```
+kubectl apply -f 5_allow_egress_policy.yaml
+```
+4. Back, inside test pod check the connections:
+* between frontend and backend pods ``curl -m 3 front.np/req?url=http://app1.np``
+5. Check ip adresses for your backend pods
+```
+kubectl get pods -n np -o wide
+```
+6. Copy the ip address of one of your backend pods and inside the test pod try connecting using that IP address: ``curl -m 3 IP-ADDRESS:8080
+Now the connection should be possible
+
+## Task 4: Adding DNS as allowed service
+
+1. Configure egress policy by executing:
+```
+kubectl apply -f 6_dns_egress_policy.yaml
+``` 
+2. Inside test pod try connecting between frontend and backend pods: ``curl -m 3 front.np/req?url=http://app1.np`` Now the connection should be possible
+3. Still in the test pod try connecting to Google from frontend pod: ``curl -m 3 front.np/req?url=http://www.google.com``
+
+## Task 5: Cleanup
+1. Delete all resources by executing:
+```
+kubectl delete ns np
+```
 ## END LAB
 
 <br><br>

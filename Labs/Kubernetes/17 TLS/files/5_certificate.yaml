@@ -5,13 +5,7 @@ metadata:
 spec:
   secretName: secret1
   dnsNames:
-  - tls.azure.cloudemo.eu
-  acme:
-    config:
-    - http01:
-        ingressClass: nginx
-      domains:
-      - tls.azure.cloudemo.eu
+  - k.pm.cloudemo.eu
   issuerRef:
     name: letsencrypt-prod
     kind: Issuer

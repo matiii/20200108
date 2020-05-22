@@ -9,3 +9,9 @@ kubectl cluster-info
 kubectl proxy
 
 az aks browse -g <resourceGroup> -n <clusterName>
+
+
+### 1.17
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep dashboard | awk '{print $1}')
+kubectl proxy
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/

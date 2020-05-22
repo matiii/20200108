@@ -7,6 +7,13 @@ spec:
   - name: main
     image: alpine
     command: [ "sleep", "99999"]
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: 400m
+      requests:
+        memory: 128Mi
+        cpu: 100m
     env:
     - name: POD_NAME
       valueFrom:

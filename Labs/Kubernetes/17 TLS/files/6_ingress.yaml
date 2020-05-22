@@ -13,9 +13,9 @@ spec:
   tls:
   - secretName: secret1
     hosts:
-    - tls.azure.cloudemo.eu
+    - k.pm.cloudemo.eu
   rules:
-   - host: tls.azure.cloudemo.eu
+   - host: k.pm.cloudemo.eu
      http:
       paths:
         - path: /
