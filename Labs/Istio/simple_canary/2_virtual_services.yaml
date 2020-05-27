@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mt1
+  namespace: srv
+spec:
+  hosts:
+  - mt1.srv.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+      - destination:
+          host: mt1.srv.svc.cluster.local
+          subset: mt1
+          port:
+            number: 8080
+        weight: 50
+      - destination:
+          host: mt1.srv.svc.cluster.local
+          subset: mt2
+          port:
+            number: 8080
+        weight: 50
+--- 
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  namespace: srv
+  name: mt1
+spec:
+  host: mt1.srv.svc.cluster.local
+  subsets:
+  - name: mt1
+    labels:
+      app: mt1
+      ver: "1"
+  - name: mt2
+    labels:
+      app: mt1
+      ver: "2"
+  
